@@ -1,0 +1,26 @@
+Group 1 project
+
+title: "Group 1- Racetrack Times"
+subtitle: "Racetrack Variables Presentation"
+author: "Group 1 <br> Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler"
+institute: "Marymount University"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r load-packages, include = FALSE}
+library(tidyverse)
+library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
+library(skimr)
+```
+
