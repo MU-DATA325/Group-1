@@ -1,26 +1,41 @@
-Group 1 project
-
-title: "Group 1- Racetrack Times"
+---
+title: "Group 1 - Racetrack Times"
 subtitle: "Racetrack Variables Presentation"
-author: "Group 1 <br> Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler"
+author: "Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler"
 institute: "Marymount University"
 date: "`r Sys.Date()`"
 output:
-  xaringan::moon_reader:
-    css: xaringan-themer.css
+ xaringan::moon_reader:
     lib_dir: libs
     nature:
-      ratio: "16:9"
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
 ---
 
-```{r load-packages, include = FALSE}
-library(tidyverse)
-library(palmerpenguins)
-library(knitr)
-library(xaringanthemer)
-library(skimr)
+# Modeling Racetrack Times
+Research Question- Which car manufacturer produces the fastest track times?
+
+Data- Our data came from the Virginia International Raceway. This facility uses three paddocks
+with timing towers, a separate skid pad, and covered tech bays. The track offers multiple course
+options with different lengths and routes. Our data is collected through timing towers which
+records lap times and also the skid pad which records handling.
+---
+
+# R Code
+
+```{r comment='#'}
+# a boring regression
+fit = lm(dist ~ 1 + speed, data = cars)
+coef(summary(fit))
 ```
 
+---
+
+# R Plots
+
+```{r cars, fig.height=4}
+par(mar = c(4, 4, 1, .1))
+plot(cars, pch = 19, col = 'darkgray', las = 1)
+abline(fit, lwd = 2)
+```
