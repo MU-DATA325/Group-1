@@ -47,9 +47,7 @@ records lap times and also the skid pad which records handling.
 ```r
 Racetrack_data &lt;- read_excel("data/laptimes3.xlsx")
 ```
----
 
-## Looking at the Data
 
 
 ```r
@@ -62,6 +60,9 @@ names(Racetrack_data)
 ## [5] "Bedford_West_Circuit_Lap_Time" "Serres_Circuit_Lap_Time"      
 ## [7] "Hockenheim"                    "Nordshleife_Nurburgring"
 ```
+---
+
+## Looking at the data
 
 
 ```r
@@ -287,6 +288,8 @@ ggplot(data = favorites,
 ![](Group-1-Project-2_files/figure-html/racetrack 5-1.png)&lt;!-- --&gt;
 ---
 
+## Tusukba Vs. Nordshleife Comparison
+
 
 ```r
 ggplot(data = Racetrack_data,
@@ -299,13 +302,19 @@ ggplot(data = Racetrack_data,
 ```
 
 ![](Group-1-Project-2_files/figure-html/racetrack 6-1.png)&lt;!-- --&gt;
+---
 
+## Taking a closer look
+
+This code chunk allowed us to view the cars under a 65 second time at the Tusukba track. 
 
 ```r
 fastest &lt;- Racetrack_data %&gt;%
   filter(Tsukuba_Lap_Time &lt; 65)
 ```
 ---
+
+## Tusukba Vs. Nordshleife Comparison 
 
 
 ```r

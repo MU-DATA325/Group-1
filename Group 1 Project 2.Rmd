@@ -36,13 +36,14 @@ records lap times and also the skid pad which records handling.
 ```{r}
 Racetrack_data <- read_excel("data/laptimes3.xlsx")
 ```
----
 
-## Looking at the Data
 
 ```{r first glance, message=FALSE, warning=FALSE, paged.print=FALSE}
 names(Racetrack_data)
 ```
+---
+
+## Looking at the data
 
 ```{r}
 glimpse(Racetrack_data)
@@ -174,6 +175,8 @@ ggplot(data = favorites,
 ```
 ---
 
+## Tusukba Vs. Nordshleife Comparison
+
 ```{r racetrack 6}
 ggplot(data = Racetrack_data,
        mapping = aes(x = Tsukuba_Lap_Time,
@@ -183,12 +186,18 @@ ggplot(data = Racetrack_data,
   labs(title = "Tusukba vs. Nordshleife Comparison",
        x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
 ```
+---
 
+## Taking a closer look
+
+This code chunk allowed us to view the cars under a 65 second time at the Tusukba track. 
 ```{r}
 fastest <- Racetrack_data %>%
   filter(Tsukuba_Lap_Time < 65)
 ```
 ---
+
+## Tusukba Vs. Nordshleife Comparison 
 
 ```{r racetrack 7}
 ggplot(data = fastest,
