@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Group 1 - Racetrack Times</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler" />
+    <meta name="date" content="2021-04-25" />
+    <script src="Group-1-Project-2_files/header-attrs-2.7/header-attrs.js"></script>
+    <link href="Group-1-Project-2_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="Group-1-Project-2_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Group 1 - Racetrack Times
+## Racetrack Variables Presentation
+### Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler
+### Marymount University
+### 2021-04-25
+
+---
+
+
+## Introduction
+
+
+```r
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+```
+
+```
+## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.1.1     ✓ dplyr   1.0.5
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.1
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+
+```r
+library(tidymodels)
+```
+
+```
+## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.3 ──
+```
+
+```
+## ✓ broom        0.7.6      ✓ rsample      0.0.9 
+## ✓ dials        0.0.9      ✓ tune         0.1.5 
+## ✓ infer        0.5.4      ✓ workflows    0.2.2 
+## ✓ modeldata    0.1.0      ✓ workflowsets 0.0.2 
+## ✓ parsnip      0.1.5      ✓ yardstick    0.0.8 
+## ✓ recipes      0.1.16
+```
+
+```
+## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## ● Use tidymodels_prefer() to resolve common conflicts.
+```
+
+```r
+library(readxl)
+library(xaringan)
+```
+
+# Modeling Racetrack Times
+Research Question- Which car manufacturer produces the fastest track times?
+
+Data- Our data came from the 5 Raceways. These facility use three paddocks
+with timing towers, a separate skid pad, and covered tech bays. The track offers multiple course
+options with different lengths and routes. Our data is collected through timing towers which
+records lap times and also the skid pad which records handling.
+---
+
+
+```r
+Racetrack_data &lt;- read_excel("data/laptimes3.xlsx")
+```
+
+---
+
+## Looking at the Data
+
+
+```r
+names(Racetrack_data)
+```
+
+```
+## [1] "car"                           "Model"                        
+## [3] "Source"                        "Tsukuba_Lap_Time"             
+## [5] "Bedford_West_Circuit_Lap_Time" "Serres_Circuit_Lap_Time"      
+## [7] "Hockenheim"                    "Nordshleife_Nurburgring"
+```
+
+
+```r
+glimpse(Racetrack_data)
+```
+
+```
+## Rows: 358
+## Columns: 8
+## $ car                           &lt;chr&gt; "Gumbert", "Caterham", "Porsche", "Cater…
+## $ Model                         &lt;chr&gt; "Apollo S", "R500 Evolution", "Carrera G…
+## $ Source                        &lt;chr&gt; "EVO Magazine UK", "EVO Magazine UK", "E…
+## $ Tsukuba_Lap_Time              &lt;dbl&gt; 60.08, 60.25, 60.31, 60.69, 60.39, 61.15…
+## $ Bedford_West_Circuit_Lap_Time &lt;dbl&gt; 79.40, 79.62, 79.70, 80.20, 79.81, 80.81…
+## $ Serres_Circuit_Lap_Time       &lt;dbl&gt; 84.20, 84.43, 84.52, 85.05, 85.50, 85.87…
+## $ Hockenheim                    &lt;dbl&gt; 68.05, 68.23, 68.60, 68.73, 68.40, 68.53…
+## $ Nordshleife_Nurburgring       &lt;dbl&gt; 446.07, 447.30, 447.75, 450.56, 448.39, …
+```
+
+
+```r
+select(Racetrack_data, car)
+```
+
+```
+## # A tibble: 358 x 1
+##    car           
+##    &lt;chr&gt;         
+##  1 Gumbert       
+##  2 Caterham      
+##  3 Porsche       
+##  4 Caterham      
+##  5 Manthye Motors
+##  6 Nissan        
+##  7 Caterham      
+##  8 Ariel         
+##  9 Lamborghini   
+## 10 Ariel         
+## # … with 348 more rows
+```
+
+
+```r
+Racetrack_data %&gt;%
+  count(car, sort = TRUE)
+```
+
+```
+## # A tibble: 69 x 2
+##    car             n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 Porsche        36
+##  2 BMW            30
+##  3 Honda          26
+##  4 Nissan         25
+##  5 Ferrari        17
+##  6 Mercedes       17
+##  7 Mitsubishi     17
+##  8 Audi           14
+##  9 Mazda          14
+## 10 Lamborghini    12
+## # … with 59 more rows
+```
+---
+
+
+```r
+Racetrack_data %&gt;%
+  group_by(car) %&gt;%
+  summarise(
+    min_time = min(Tsukuba_Lap_Time),
+    mean_time = mean(Tsukuba_Lap_Time),
+    median_time = median(Tsukuba_Lap_Time),
+    max_time = max(Tsukuba_Lap_Time)
+    )
+```
+
+```
+## # A tibble: 69 x 5
+##    car          min_time mean_time median_time max_time
+##    &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+##  1 AC Schnitzer     64.9      65.0        65.0     65.1
+##  2 Alfa             72.0      74.3        73.7     77.9
+##  3 Alpina           65.7      66.7        66.5     68.2
+##  4 Ariel            61.7      61.8        61.8     61.9
+##  5 Ascari           63.0      63.0        63.0     63.0
+##  6 Aston Martin     64.9      65.9        65.9     66.7
+##  7 Audi             63.5      68.0        68.0     71.8
+##  8 Bentley          68.1      68.9        68.9     69.8
+##  9 BMW              64.2      68.6        68.2     76.8
+## 10 Bovingdon        65.0      65.0        65.0     65.0
+## # … with 59 more rows
+```
+
+
+```r
+Racetrack_data %&gt;%
+  filter(car == "Porsche"| car == "BMW" | car == "Ferrari") %&gt;%
+  group_by(car) %&gt;%
+  summarise(
+    min_time = min(Tsukuba_Lap_Time),
+    mean_time = mean(Tsukuba_Lap_Time),
+    median_time = median(Tsukuba_Lap_Time),
+    max_time = max(Tsukuba_Lap_Time)
+    )
+```
+
+```
+## # A tibble: 3 x 5
+##   car     min_time mean_time median_time max_time
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+## 1 BMW         64.2      68.6        68.2     76.8
+## 2 Ferrari     62.1      65.8        65.6     70.6
+## 3 Porsche     60.3      66.2        66       71
+```
+---
+
+## Modeling Racetrack Times
+Research Question- Which car manufacturer produces the fastest track times?
+
+## Racetrack Exploratory Data Anaylsis
+
+We found something interesting was going on over the season. If you look at each of the following graphs, we compared times at later races to the cars first season performance at Tsukuba.
+
+
+
+```r
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Bedford_West_Circuit_Lap_Time)) +
+  geom_point() +
+  labs(title = "Tusukba vs. Bedford Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Bedford Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack-1.png)&lt;!-- --&gt;
+---
+
+
+```r
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Serres_Circuit_Lap_Time)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Serres Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Serres Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 2-1.png)&lt;!-- --&gt;
+---
+
+
+```r
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Hockenheim)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Hockenheim Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Hockenheim Time (sec)")
+```
+
+```
+## Warning: Removed 2 rows containing missing values (geom_point).
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 3-1.png)&lt;!-- --&gt;
+---
+
+
+```r
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 4-1.png)&lt;!-- --&gt;
+
+
+```r
+favorites &lt;- Racetrack_data %&gt;%
+  filter(car == "Porsche"| car == "BMW" | car == "Ferrari")
+```
+---
+
+
+```r
+ggplot(data = favorites,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Favorites at Tusukba vs. Nordshleife Comparison",
+       subtitle = "Favorite Car Types Times to Complete Laps at the Respecitve course",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 5-1.png)&lt;!-- --&gt;
+---
+
+
+```r
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 6-1.png)&lt;!-- --&gt;
+
+
+```r
+fastest &lt;- Racetrack_data %&gt;%
+  filter(Tsukuba_Lap_Time &lt; 65)
+```
+---
+
+
+```r
+ggplot(data = fastest,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 7-1.png)&lt;!-- --&gt;
+
+
+```r
+morefastest &lt;- Racetrack_data %&gt;%
+  filter(Tsukuba_Lap_Time &lt; 60.5)
+```
+
+
+```r
+ggplot(data = morefastest,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/racetrack 8-1.png)&lt;!-- --&gt;
+
+
+```r
+ggplot(data = morefastest,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+![](Group-1-Project-2_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

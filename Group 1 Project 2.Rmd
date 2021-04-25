@@ -1,0 +1,203 @@
+---
+title: "Group 1 - Racetrack Times"
+subtitle: "Racetrack Variables Presentation"
+author: "Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler"
+institute: "Marymount University"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+  lib_dir: libs
+nature:
+  highlightStyle: github
+highlightLines: true
+countIncrementalSlides: false
+---
+
+## Introduction
+
+```{r libraries}
+library(tidyverse)
+library(tidymodels)
+library(readxl)
+library(xaringan)
+```
+
+# Modeling Racetrack Times
+Research Question- Which car manufacturer produces the fastest track times?
+
+Data- Our data came from the 5 Raceways. These facility use three paddocks
+with timing towers, a separate skid pad, and covered tech bays. The track offers multiple course
+options with different lengths and routes. Our data is collected through timing towers which
+records lap times and also the skid pad which records handling.
+---
+
+```{r}
+Racetrack_data <- read_excel("data/laptimes3.xlsx")
+```
+
+---
+
+## Looking at the Data
+
+```{r first glance}
+names(Racetrack_data)
+```
+
+```{r}
+glimpse(Racetrack_data)
+```
+
+```{r summary}
+select(Racetrack_data, car)
+```
+
+```{r car type}
+Racetrack_data %>%
+  count(car, sort = TRUE)
+```
+---
+
+```{r car type 2}
+Racetrack_data %>%
+  group_by(car) %>%
+  summarise(
+    min_time = min(Tsukuba_Lap_Time),
+    mean_time = mean(Tsukuba_Lap_Time),
+    median_time = median(Tsukuba_Lap_Time),
+    max_time = max(Tsukuba_Lap_Time)
+    )
+```
+
+```{r}
+Racetrack_data %>%
+  filter(car == "Porsche"| car == "BMW" | car == "Ferrari") %>%
+  group_by(car) %>%
+  summarise(
+    min_time = min(Tsukuba_Lap_Time),
+    mean_time = mean(Tsukuba_Lap_Time),
+    median_time = median(Tsukuba_Lap_Time),
+    max_time = max(Tsukuba_Lap_Time)
+    )
+```
+---
+
+## Modeling Racetrack Times
+Research Question- Which car manufacturer produces the fastest track times?
+
+## Racetrack Exploratory Data Anaylsis
+
+We found something interesting was going on over the season. If you look at each of the following graphs, we compared times at later races to the cars first season performance at Tsukuba.
+
+
+```{r racetrack}
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Bedford_West_Circuit_Lap_Time)) +
+  geom_point() +
+  labs(title = "Tusukba vs. Bedford Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Bedford Time (sec)")
+```
+---
+
+```{r racetrack 2}
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Serres_Circuit_Lap_Time)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Serres Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Serres Time (sec)")
+```
+---
+
+```{r racetrack 3}
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Hockenheim)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Hockenheim Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Hockenheim Time (sec)")
+```
+---
+
+```{r racetrack 4}
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       subtitle = "Times to complete laps at the respecitve course",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+```{r subset}
+favorites <- Racetrack_data %>%
+  filter(car == "Porsche"| car == "BMW" | car == "Ferrari")
+```
+---
+
+```{r racetrack 5}
+ggplot(data = favorites,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Favorites at Tusukba vs. Nordshleife Comparison",
+       subtitle = "Favorite Car Types Times to Complete Laps at the Respecitve course",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+---
+
+```{r racetrack 6}
+ggplot(data = Racetrack_data,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+```{r}
+fastest <- Racetrack_data %>%
+  filter(Tsukuba_Lap_Time < 65)
+```
+---
+
+```{r racetrack 7}
+ggplot(data = fastest,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+```{r}
+morefastest <- Racetrack_data %>%
+  filter(Tsukuba_Lap_Time < 60.5)
+```
+
+```{r racetrack 8}
+ggplot(data = morefastest,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
+```{r}
+ggplot(data = morefastest,
+       mapping = aes(x = Tsukuba_Lap_Time,
+                     y = Nordshleife_Nurburgring,
+                     colour = car)) +
+  geom_point()+
+  labs(title = "Tusukba vs. Nordshleife Comparison",
+       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
+```
+
