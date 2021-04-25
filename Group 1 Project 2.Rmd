@@ -69,7 +69,7 @@ We were curious how many cars from each manufacturer were listed in the dataset
 
 ## Times on the tracks
 
-```{r car type 2}
+```{r car type 2, message=FALSE, warning=FALSE, paged.print=FALSE}
 Racetrack_data %>%
   group_by(car) %>%
   summarise(
@@ -83,7 +83,7 @@ Racetrack_data %>%
 
 ## Car Comparison
 
-```{r}
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 Racetrack_data %>%
   filter(car == "Porsche"| car == "BMW" | car == "Ferrari") %>%
   group_by(car) %>%
@@ -106,7 +106,7 @@ We found something interesting was going on over the season. If you look at each
 
 ## Tusukba Vs. Bedford West
 
-```{r racetrack}
+```{r racetrack, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 ggplot(data = Racetrack_data,
        mapping = aes(x = Tsukuba_Lap_Time,
                      y = Bedford_West_Circuit_Lap_Time)) +
@@ -208,6 +208,11 @@ ggplot(data = fastest,
   labs(title = "Tusukba vs. Nordshleife Comparison",
        x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
 ```
+---
+
+## We were still curious to pinpoint the fastest car
+
+We decided to change the time to under 60.5 seconds. Giving us a more magnified view of the data all clumped together at the bottom. 
 
 ```{r}
 morefastest <- Racetrack_data %>%
@@ -215,7 +220,9 @@ morefastest <- Racetrack_data %>%
 ```
 ---
 
-```{r racetrack 8}
+## 4 Car comparison
+
+```{r racetrack 8, message=FALSE, warning=FALSE, paged.print=FALSE}
 ggplot(data = morefastest,
        mapping = aes(x = Tsukuba_Lap_Time,
                      y = Nordshleife_Nurburgring,
@@ -224,6 +231,10 @@ ggplot(data = morefastest,
   labs(title = "Tusukba vs. Nordshleife Comparison",
        x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
 ```
+---
 
+## Summary 
+
+We found that the fastest car at the respective tracks is a Gumbert. 
 
 
