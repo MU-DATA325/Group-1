@@ -15,7 +15,7 @@ countIncrementalSlides: false
 
 ## Introduction
 
-```{r libraries}
+```{r libraries, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(tidyverse)
 library(tidymodels)
 library(readxl)
@@ -31,31 +31,42 @@ options with different lengths and routes. Our data is collected through timing 
 records lap times and also the skid pad which records handling.
 ---
 
+## Our data
+
 ```{r}
 Racetrack_data <- read_excel("data/laptimes3.xlsx")
 ```
-
 ---
 
 ## Looking at the Data
 
-```{r first glance}
+```{r first glance, message=FALSE, warning=FALSE, paged.print=FALSE}
 names(Racetrack_data)
 ```
 
 ```{r}
 glimpse(Racetrack_data)
 ```
+---
 
-```{r summary}
+## We are interested in the car type
+
+```{r summary, message=FALSE, warning=FALSE, paged.print=FALSE}
 select(Racetrack_data, car)
 ```
+---
 
-```{r car type}
+## Total amount of cars
+
+```{r car type, message=FALSE, warning=FALSE, paged.print=FALSE}
 Racetrack_data %>%
   count(car, sort = TRUE)
 ```
+We were curious how many cars from each manufacturer were listed in the dataset
+
 ---
+
+## Times on the tracks
 
 ```{r car type 2}
 Racetrack_data %>%
@@ -67,6 +78,9 @@ Racetrack_data %>%
     max_time = max(Tsukuba_Lap_Time)
     )
 ```
+---
+
+## Car Comparison
 
 ```{r}
 Racetrack_data %>%
@@ -87,7 +101,9 @@ Research Question- Which car manufacturer produces the fastest track times?
 ## Racetrack Exploratory Data Anaylsis
 
 We found something interesting was going on over the season. If you look at each of the following graphs, we compared times at later races to the cars first season performance at Tsukuba.
+---
 
+## Tusukba Vs. Bedford West
 
 ```{r racetrack}
 ggplot(data = Racetrack_data,
@@ -100,6 +116,8 @@ ggplot(data = Racetrack_data,
 ```
 ---
 
+## Tusukba Vs. Serres
+
 ```{r racetrack 2}
 ggplot(data = Racetrack_data,
        mapping = aes(x = Tsukuba_Lap_Time,
@@ -111,7 +129,9 @@ ggplot(data = Racetrack_data,
 ```
 ---
 
-```{r racetrack 3}
+## Tusukba Vs. Hockenheim
+
+```{r racetrack 3, message=FALSE, warning=FALSE, paged.print=FALSE}
 ggplot(data = Racetrack_data,
        mapping = aes(x = Tsukuba_Lap_Time,
                      y = Hockenheim)) +
@@ -121,6 +141,8 @@ ggplot(data = Racetrack_data,
        x = "Tusukba Time (sec)", y = "Hockenheim Time (sec)")
 ```
 ---
+
+## Tusukba Vs. Nordshleife Nurburgring
 
 ```{r racetrack 4}
 ggplot(data = Racetrack_data,
@@ -137,6 +159,8 @@ favorites <- Racetrack_data %>%
   filter(car == "Porsche"| car == "BMW" | car == "Ferrari")
 ```
 ---
+
+## Favorites
 
 ```{r racetrack 5}
 ggplot(data = favorites,
@@ -180,6 +204,7 @@ ggplot(data = fastest,
 morefastest <- Racetrack_data %>%
   filter(Tsukuba_Lap_Time < 60.5)
 ```
+---
 
 ```{r racetrack 8}
 ggplot(data = morefastest,
@@ -191,13 +216,5 @@ ggplot(data = morefastest,
        x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
 ```
 
-```{r}
-ggplot(data = morefastest,
-       mapping = aes(x = Tsukuba_Lap_Time,
-                     y = Nordshleife_Nurburgring,
-                     colour = car)) +
-  geom_point()+
-  labs(title = "Tusukba vs. Nordshleife Comparison",
-       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
-```
+
 

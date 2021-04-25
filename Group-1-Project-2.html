@@ -27,54 +27,7 @@ class: center, middle, inverse, title-slide
 
 ```r
 library(tidyverse)
-```
-
-```
-## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
-```
-
-```
-## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
-## ✓ tibble  3.1.1     ✓ dplyr   1.0.5
-## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   1.4.0     ✓ forcats 0.5.1
-```
-
-```
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
-```
-
-```r
 library(tidymodels)
-```
-
-```
-## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.3 ──
-```
-
-```
-## ✓ broom        0.7.6      ✓ rsample      0.0.9 
-## ✓ dials        0.0.9      ✓ tune         0.1.5 
-## ✓ infer        0.5.4      ✓ workflows    0.2.2 
-## ✓ modeldata    0.1.0      ✓ workflowsets 0.0.2 
-## ✓ parsnip      0.1.5      ✓ yardstick    0.0.8 
-## ✓ recipes      0.1.16
-```
-
-```
-## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
-## x scales::discard() masks purrr::discard()
-## x dplyr::filter()   masks stats::filter()
-## x recipes::fixed()  masks stringr::fixed()
-## x dplyr::lag()      masks stats::lag()
-## x yardstick::spec() masks readr::spec()
-## x recipes::step()   masks stats::step()
-## ● Use tidymodels_prefer() to resolve common conflicts.
-```
-
-```r
 library(readxl)
 library(xaringan)
 ```
@@ -88,11 +41,12 @@ options with different lengths and routes. Our data is collected through timing 
 records lap times and also the skid pad which records handling.
 ---
 
+## Our data
+
 
 ```r
 Racetrack_data &lt;- read_excel("data/laptimes3.xlsx")
 ```
-
 ---
 
 ## Looking at the Data
@@ -126,6 +80,9 @@ glimpse(Racetrack_data)
 ## $ Hockenheim                    &lt;dbl&gt; 68.05, 68.23, 68.60, 68.73, 68.40, 68.53…
 ## $ Nordshleife_Nurburgring       &lt;dbl&gt; 446.07, 447.30, 447.75, 450.56, 448.39, …
 ```
+---
+
+## We are interested in the car type
 
 
 ```r
@@ -148,6 +105,9 @@ select(Racetrack_data, car)
 ## 10 Ariel         
 ## # … with 348 more rows
 ```
+---
+
+## Total amount of cars
 
 
 ```r
@@ -171,7 +131,11 @@ Racetrack_data %&gt;%
 ## 10 Lamborghini    12
 ## # … with 59 more rows
 ```
+We were curious how many cars from each manufacturer were listed in the dataset
+
 ---
+
+## Times on the tracks
 
 
 ```r
@@ -201,6 +165,9 @@ Racetrack_data %&gt;%
 ## 10 Bovingdon        65.0      65.0        65.0     65.0
 ## # … with 59 more rows
 ```
+---
+
+## Car Comparison
 
 
 ```r
@@ -231,7 +198,9 @@ Research Question- Which car manufacturer produces the fastest track times?
 ## Racetrack Exploratory Data Anaylsis
 
 We found something interesting was going on over the season. If you look at each of the following graphs, we compared times at later races to the cars first season performance at Tsukuba.
+---
 
+## Tusukba Vs. Bedford West
 
 
 ```r
@@ -247,6 +216,8 @@ ggplot(data = Racetrack_data,
 ![](Group-1-Project-2_files/figure-html/racetrack-1.png)&lt;!-- --&gt;
 ---
 
+## Tusukba Vs. Serres
+
 
 ```r
 ggplot(data = Racetrack_data,
@@ -261,6 +232,8 @@ ggplot(data = Racetrack_data,
 ![](Group-1-Project-2_files/figure-html/racetrack 2-1.png)&lt;!-- --&gt;
 ---
 
+## Tusukba Vs. Hockenheim
+
 
 ```r
 ggplot(data = Racetrack_data,
@@ -272,12 +245,10 @@ ggplot(data = Racetrack_data,
        x = "Tusukba Time (sec)", y = "Hockenheim Time (sec)")
 ```
 
-```
-## Warning: Removed 2 rows containing missing values (geom_point).
-```
-
 ![](Group-1-Project-2_files/figure-html/racetrack 3-1.png)&lt;!-- --&gt;
 ---
+
+## Tusukba Vs. Nordshleife Nurburgring
 
 
 ```r
@@ -298,6 +269,8 @@ favorites &lt;- Racetrack_data %&gt;%
   filter(car == "Porsche"| car == "BMW" | car == "Ferrari")
 ```
 ---
+
+## Favorites
 
 
 ```r
@@ -352,6 +325,7 @@ ggplot(data = fastest,
 morefastest &lt;- Racetrack_data %&gt;%
   filter(Tsukuba_Lap_Time &lt; 60.5)
 ```
+---
 
 
 ```r
@@ -367,17 +341,6 @@ ggplot(data = morefastest,
 ![](Group-1-Project-2_files/figure-html/racetrack 8-1.png)&lt;!-- --&gt;
 
 
-```r
-ggplot(data = morefastest,
-       mapping = aes(x = Tsukuba_Lap_Time,
-                     y = Nordshleife_Nurburgring,
-                     colour = car)) +
-  geom_point()+
-  labs(title = "Tusukba vs. Nordshleife Comparison",
-       x = "Tusukba Time (sec)", y = "Nordshleife Time (sec)")
-```
-
-![](Group-1-Project-2_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
