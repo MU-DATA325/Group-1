@@ -4,7 +4,7 @@
     <title>Group 1 - Racetrack Times</title>
     <meta charset="utf-8" />
     <meta name="author" content="Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler" />
-    <meta name="date" content="2021-04-25" />
+    <meta name="date" content="2021-04-26" />
     <script src="Group-1-Project-2_files/header-attrs-2.7/header-attrs.js"></script>
     <link href="Group-1-Project-2_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="Group-1-Project-2_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 ## Racetrack Variables Presentation
 ### Troy Tangolics, Colin Birch, Jonah Mackiewicz, Nick Kinstler
 ### Marymount University
-### 2021-04-25
+### 2021-04-26
 
 ---
 
@@ -35,8 +35,8 @@ library(xaringan)
 # Modeling Racetrack Times
 Research Question- Which car manufacturer produces the fastest track times?
 
-Data- Our data came from the 5 Raceways. These facility use three paddocks
-with timing towers, a separate skid pad, and covered tech bays. The track offers multiple course
+Data- Our data came from the 5 Raceways. These facilities use paddocks
+with timing towers, separate skid pads, and covered tech bays. The track offers multiple course
 options with different lengths and routes. Our data is collected through timing towers which
 records lap times and also the skid pad which records handling.
 ---
@@ -201,7 +201,7 @@ Research Question- Which car manufacturer produces the fastest track times?
 We found something interesting was going on over the season. If you look at each of the following graphs, we compared times at later races to the cars first season performance at Tsukuba.
 ---
 
-## Tusukba Vs. Bedford West
+## Tsukuba Vs. Bedford West
 
 
 ```r
@@ -217,7 +217,7 @@ ggplot(data = Racetrack_data,
 ![](Group-1-Project-2_files/figure-html/racetrack-1.png)&lt;!-- --&gt;
 ---
 
-## Tusukba Vs. Serres
+## Tsukuba Vs. Serres
 
 
 ```r
@@ -233,7 +233,7 @@ ggplot(data = Racetrack_data,
 ![](Group-1-Project-2_files/figure-html/racetrack 2-1.png)&lt;!-- --&gt;
 ---
 
-## Tusukba Vs. Hockenheim
+## Tsukuba Vs. Hockenheim
 
 
 ```r
@@ -249,7 +249,7 @@ ggplot(data = Racetrack_data,
 ![](Group-1-Project-2_files/figure-html/racetrack 3-1.png)&lt;!-- --&gt;
 ---
 
-## Tusukba Vs. Nordshleife Nurburgring
+## Tsukuba Vs. Nordshleife Nurburgring
 
 
 ```r
@@ -288,7 +288,7 @@ ggplot(data = favorites,
 ![](Group-1-Project-2_files/figure-html/racetrack 5-1.png)&lt;!-- --&gt;
 ---
 
-## Tusukba Vs. Nordshleife Comparison
+## Tsukuba Vs. Nordshleife Comparison
 
 
 ```r
@@ -314,7 +314,7 @@ fastest &lt;- Racetrack_data %&gt;%
 ```
 ---
 
-## Tusukba Vs. Nordshleife Comparison 
+## Tsukuba Vs. Nordshleife Comparison 
 
 
 ```r
@@ -359,8 +359,12 @@ ggplot(data = morefastest,
 
 ## Summary 
 
-We found that the fastest car at the respective tracks is a Gumbert. 
-Also that we love these cars
+Over the course of the season, it can be seen that certain cars preform better towards the end of the year. Their course times improve and can be seen getting even faster at the certain tracks. The data also shows that many cars simply maintain similar speeds throughout the different tracks. 
+
+To answer our main research question, we found that the fastest car at the respective tracks is a Gumbert Apollo. The next closest were Caterham and Porsche.
+
+
+
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
